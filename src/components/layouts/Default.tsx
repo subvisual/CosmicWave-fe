@@ -5,7 +5,7 @@ interface Props {
 }
 
 const Default = ({ children }: Props) => {
-  return <div>{children}</div>;
+  return <div className="bg-black h-full w-full">{children}</div>;
 };
 
 export default Default;
