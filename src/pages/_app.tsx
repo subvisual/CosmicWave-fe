@@ -17,6 +17,8 @@ import {
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 
+import Default from "@/components/layouts/Default";
+
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet, foundry],
   [publicProvider()]
@@ -57,9 +59,11 @@ const App = ({ Component, pageProps }: AppProps) => {
             />
             <link rel="icon" href="/favicon.ico" />
           </Head>
-          <main>
-            <Component {...pageProps} />
-          </main>
+          <Default>
+            <main>
+              <Component {...pageProps} />
+            </main>
+          </Default>
         </RainbowKitProvider>
       </WagmiConfig>
     </QueryClientProvider>

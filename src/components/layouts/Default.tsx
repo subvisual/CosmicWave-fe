@@ -1,11 +1,11 @@
-import React from 'react'
+import { type ReactNode } from "react";
 
-type Props = {}
-
-const Default = (props: Props) => {
-  return (
-    <div>Default</div>
-  )
+interface Props {
+  children: ReactNode;
 }
 
-export default Default
+const Default = ({ children }: Props) => {
+  return <div>{children}</div>;
+};
+
+export default Default;
