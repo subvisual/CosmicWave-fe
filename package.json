@@ -1,0 +1,50 @@
+{
+  "name": "stack3",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint:tsc": "tsc --noEmit",
+    "lint:eslint": "eslint ./src/",
+    "lint:prettier": "prettier --check ./src/",
+    "lint": "yarn lint:tsc && yarn lint:eslint && yarn lint:prettier"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.9",
+    "@heroicons/react": "^2.0.15",
+    "@next/font": "13.1.6",
+    "@rainbow-me/rainbowkit": "^0.8.1",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "18.11.18",
+    "@types/react": "18.0.27",
+    "@types/react-dom": "18.0.10",
+    "@wagmi/cli": "^0.1.6",
+    "classnames": "^2.3.2",
+    "eslint": "^8.0.1",
+    "eslint-config-next": "13.1.6",
+    "eslint-config-prettier": "^8.6.0",
+    "ethers": "^5.7.2",
+    "lodash": "^4.17.21",
+    "next": "13.1.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-query": "^3.39.3",
+    "typescript": "*",
+    "wagmi": "^0.11.5",
+    "zustand": "^4.3.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "autoprefixer": "^10.4.13",
+    "eslint-config-standard-with-typescript": "^33.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-react": "^7.32.1",
+    "ipfs": "^0.66.0",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.4"
+  }
+}
