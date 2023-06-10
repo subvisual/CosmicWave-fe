@@ -2,6 +2,7 @@ import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import UploadToIPFS from "@/components/modules/UploadToIPFS";
+import StorePolybase from "@/components/modules/StorePolybase";
 
 const index = () => {
   const { address } = useAccount();
@@ -9,7 +10,11 @@ const index = () => {
     <main className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
       <div className="flex gap-1 flex-col justify-center">
         <ConnectButton />
-        {!!address && <UploadToIPFS />}
+        {!!address && (
+          <>
+            <UploadToIPFS />
+          </>
+        )}
       </div>
     </main>
   );

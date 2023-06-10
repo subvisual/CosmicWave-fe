@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import usePolybase from "@/hooks/usePolybase";
+import React, { useEffect, useState } from "react";
 
 interface Props {
   ipfs: any;
@@ -7,6 +8,24 @@ interface Props {
 const UploadFile = ({ ipfs }: Props) => {
   const [fileHash, setFileHash] = useState(null);
   const [error, setError] = useState<any>(null);
+  const [cids, setCids] = useState<any>([]);
+
+  const polybase = usePolybase();
+  useEffect(() => {
+    if (!fileHash) return;
+    void polybase.saveRecord(fileHash);
+  }, [fileHash]);
+
+  useEffect(() => {
+    const retrieveRecords = async () => {
+      await polybase.getAllRecords().then((records) => {
+        setCids(records);
+      });
+    };
+    void retrieveRecords();
+  }, [polybase]);
+
+  console.log(cids);
 
   const captureFile = async (file: any) => {
     const fileDetails = {

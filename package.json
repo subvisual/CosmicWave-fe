@@ -15,6 +15,7 @@
     "@headlessui/react": "^1.7.9",
     "@heroicons/react": "^2.0.15",
     "@next/font": "13.1.6",
+    "@polybase/client": "^0.6.1",
     "@rainbow-me/rainbowkit": "^1.0.1",
     "@types/lodash": "^4.14.191",
     "@types/node": "20.2.5",
