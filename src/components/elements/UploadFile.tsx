@@ -1,12 +1,15 @@
 import useDatabase from "@/hooks/useDatabase";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import * as musicMetadata from "music-metadata-browser";
 
 interface Props {
   ipfs: any;
 }
 
 const UploadFile = ({ ipfs }: Props) => {
-  const [fileHash, setFileHash] = useState<string | undefined>(undefined);
+  const [fileHash, setFileHash] = useState<
+    { fileHash: string; metadata: any } | undefined
+  >(undefined);
   const [error, setError] = useState<any>(null);
 
   const polybase = useDatabase();
@@ -16,7 +19,7 @@ const UploadFile = ({ ipfs }: Props) => {
 
     const addRecord = async () => {
       await polybase
-        .saveRecord(`${fileHash}`)
+        .saveRecord(fileHash.fileHash, fileHash.metadata)
         .then((response) => {
           console.log(response);
         })
@@ -30,19 +33,12 @@ const UploadFile = ({ ipfs }: Props) => {
   }, [fileHash]);
 
   const captureFile = async (file: any) => {
-    const fileDetails = {
-      path: file.name,
-      content: file,
-    };
-
-    const options = {
-      wrapWithDirectory: true,
-    };
+    const _metadata = await musicMetadata.parseBlob(file);
+    const metadata = JSON.stringify({ name: file.name, ..._metadata.format });
 
     try {
       const added = await ipfs.add(file);
-      setFileHash(added.cid.toString());
-      console.log(added.cid.toString());
+      setFileHash({ fileHash: added.cid.toString(), metadata });
     } catch (err: any) {
       console.log(err);
     }
@@ -103,12 +99,12 @@ const UploadFile = ({ ipfs }: Props) => {
             id="gateway-link"
             target="_blank"
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            href={`https://127.0.0.1:5001/ipfs/${fileHash}`}
+            href={`https://127.0.0.1:5001/ipfs/${fileHash.fileHash}`}
             rel="noreferrer"
             className="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white"
           >
             <span className="w-full mr-3">
-              <span className="font-bold">CID</span> {fileHash}
+              <span className="font-bold">CID</span> {fileHash.fileHash}
             </span>
             <svg
               xmlns="http://www.w3.org/2000/svg"

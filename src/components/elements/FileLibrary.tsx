@@ -27,12 +27,18 @@ const FileLibrary = () => {
             Your library
           </h1>
           <ul className="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400">
-            {records?.map((record: any) => (
-              <li className="flex items-center" key={record.id}>
-                <MusicalNoteIcon className="w-4 h-4 mr-1.5 text-purple-500 dark:text-purple-400 flex-shrink-0" />
-                {trimCid(record.id)}
-              </li>
-            ))}
+            {records?.map((record: any) => {
+              const metadata = record.metadata
+                ? JSON.parse(record.metadata)
+                : {};
+              const title = metadata.name ?? trimCid(record.id);
+              return (
+                <li className="flex items-center" key={record.id}>
+                  <MusicalNoteIcon className="w-4 h-4 mr-1.5 text-purple-500 dark:text-purple-400 flex-shrink-0" />
+                  {title}
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
