@@ -1,12 +1,33 @@
-import React, { useState } from "react";
+import useDatabase from "@/hooks/useDatabase";
+import React, { use, useEffect, useState } from "react";
 
 interface Props {
   ipfs: any;
 }
 
 const UploadFile = ({ ipfs }: Props) => {
-  const [fileHash, setFileHash] = useState(null);
+  const [fileHash, setFileHash] = useState<string | undefined>(undefined);
   const [error, setError] = useState<any>(null);
+
+  const polybase = useDatabase();
+
+  useEffect(() => {
+    if (!fileHash) return;
+
+    const addRecord = async () => {
+      await polybase
+        .saveRecord(`${fileHash}`)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          setError(err);
+        });
+    };
+    if (fileHash) {
+      void addRecord();
+    }
+  }, [fileHash]);
 
   const captureFile = async (file: any) => {
     const fileDetails = {
@@ -61,7 +82,7 @@ const UploadFile = ({ ipfs }: Props) => {
               drop
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              SVG, PNG, JPG or GIF (MAX. 800x400px)
+              MP3 or WAV
             </p>
           </div>
           <input
@@ -81,6 +102,7 @@ const UploadFile = ({ ipfs }: Props) => {
           <a
             id="gateway-link"
             target="_blank"
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             href={`https://127.0.0.1:5001/ipfs/${fileHash}`}
             rel="noreferrer"
             className="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white"
