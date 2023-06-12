@@ -1,4 +1,5 @@
 import { Polybase } from "@polybase/client";
+import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
 const defaultNamespace =
@@ -9,6 +10,7 @@ const db = new Polybase({ defaultNamespace });
 
 const useDatabase = () => {
   const { address } = useAccount();
+  const [records, setRecords] = useState<any>([]);
 
   const saveRecord = async (cid: string) => {
     const result = await db
@@ -22,16 +24,27 @@ const useDatabase = () => {
     return result;
   };
 
-  const getAllRecords = async () => {
-    if (!address) return [];
-    const result = await db
-      .collection(collectionName)
-      .where("owner", "==", address)
-      .get();
-    return result;
-  };
+  // const getAllRecords = async () => {
+  //   if (!address) return [];
+  //   const result = await db
+  //     .collection(collectionName)
+  //     .where("owner", "==", address)
+  //     .get();
+  //   return result;
+  // };
 
-  return { saveRecord, getRecord, getAllRecords };
+  useEffect(() => {
+    if (address) {
+      db.collection(collectionName)
+        .where("owner", "==", address)
+        .onSnapshot((newDoc) => {
+          const newRecords = newDoc.data.map((doc) => doc.data);
+          setRecords(newRecords);
+        });
+    }
+  }, []);
+
+  return { saveRecord, getRecord, records };
 };
 
 export default useDatabase;
