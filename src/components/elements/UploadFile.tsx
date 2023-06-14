@@ -1,18 +1,16 @@
 import useDatabase from "@/hooks/useDatabase";
 import React, { useEffect, useState } from "react";
 import * as musicMetadata from "music-metadata-browser";
+import useHelia from "@/hooks/useHelia";
 
-interface Props {
-  ipfs: any;
-}
-
-const UploadFile = ({ ipfs }: Props) => {
+const UploadFile = () => {
   const [fileHash, setFileHash] = useState<
     { fileHash: string; metadata: any } | undefined
   >(undefined);
   const [error, setError] = useState<any>(null);
 
   const polybase = useDatabase();
+  const helia = useHelia();
 
   useEffect(() => {
     if (!fileHash) return;
@@ -37,8 +35,8 @@ const UploadFile = ({ ipfs }: Props) => {
     const metadata = JSON.stringify({ name: file.name, ..._metadata.format });
 
     try {
-      const added = await ipfs.add(file);
-      setFileHash({ fileHash: added.cid.toString(), metadata });
+      const fileCid = await helia.uploadFile(file);
+      setFileHash({ fileHash: fileCid, metadata });
     } catch (err: any) {
       console.log(err);
     }
