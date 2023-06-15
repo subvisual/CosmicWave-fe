@@ -2,7 +2,6 @@ import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import UploadToIPFS from "@/components/modules/UploadToIPFS";
-import PolybaseBoilerplate from "@/components/elements/PolybaseBoilerplate";
 
 const index = () => {
   const { address } = useAccount();
