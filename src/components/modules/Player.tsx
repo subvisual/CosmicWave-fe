@@ -8,7 +8,7 @@ const Player = () => {
   const [currentAudio, setCurrentAudio] = useState<Blob>();
 
   const currentCid =
-    "bafkreiafnndiuw63wb4einys3sb6vu6c54nvugaxjzwiqywkpgxagnzz2m";
+    "bafkreiacirmq6k2lznrdkk2xjz4l5kka5dmjz6tjqi5vechpjrb6bk6liq";
   // polybase.records[0];
 
   const fetchAudio = async () => {
