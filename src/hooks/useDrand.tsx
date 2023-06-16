@@ -35,7 +35,15 @@ const useDrand = () => {
   const getRandomness = async () => {
     if (!drandNode) return;
     const theLatestBeaconFromTheFastestClient = await fetchBeacon(drandNode);
-    return theLatestBeaconFromTheFastestClient.randomness;
+    const _randId = theLatestBeaconFromTheFastestClient.randomness.split("");
+    const rand: string[] = [];
+
+    for (let i = 0; i < _randId.length; i++) {
+      const rnum = Math.floor(Math.random() * _randId.length);
+      rand.push(_randId[rnum]);
+    }
+
+    return rand?.join("");
   };
 
   return { drandNode, getRandomness };
