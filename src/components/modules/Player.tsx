@@ -8,7 +8,7 @@ const Player = () => {
   const [currentAudio, setCurrentAudio] = useState<Blob>();
 
   const currentCid =
-    "bafkreiacirmq6k2lznrdkk2xjz4l5kka5dmjz6tjqi5vechpjrb6bk6liq";
+    "bafkreifrdpnfydzopyvgpi4iieuqt4fvyu3amjj22ffinizlegriww53lq";
   // polybase.records[0];
 
   const fetchAudio = async () => {
@@ -28,7 +28,7 @@ const Player = () => {
       ) : (
         <div className="flex flex-row items-center gap-3">
           <h1>{helia.isOnline ? "🟢" : "🔴"}</h1>
-          <audio controls src={currentAudio} />
+          <audio controls src={`https://ipfs.io/ipfs/${currentCid}`} />
         </div>
       )}
     </>
