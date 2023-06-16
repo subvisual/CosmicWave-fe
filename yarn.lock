@@ -2326,6 +2326,11 @@
   resolved "https://registry.yarnpkg.com/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-13.1.6.tgz#17ed919c723426b7d0ce1cd73d40ce3dcd342089"
   integrity sha512-Ls2OL9hi3YlJKGNdKv8k3X/lLgc3VmLG3a/DeTkAd+lAituJp8ZHmRmm9f9SL84fT3CotlzcgbdaCDfFwFA6bA==
 
+"@noble/bls12-381@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@noble/bls12-381/-/bls12-381-1.4.0.tgz#4db0e1577ef85632347e86eee81062acdda6d65b"
+  integrity sha512-mIYqC2jMX7Lcu1QtU/FFftMPDSXNCdlGex6BSf5nPojHjnzzBgs1klFWpB1R8YjqHmOO9xrCzF19f2c42+z3vg==
+
 "@noble/curves@1.0.0", "@noble/curves@~1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.0.0.tgz#e40be8c7daf088aaf291887cbc73f43464a92932"
@@ -5041,6 +5046,13 @@ dotenv@^16.0.3:
   version "16.1.4"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.1.4.tgz#67ac1a10cd9c25f5ba604e4e08bc77c0ebe0ca8c"
   integrity sha512-m55RtE8AsPeJBpOIFKihEmqUcoVncQIwo7x9U8ZwLEZw9ZpXboz2c+rvog+jUaJvVrZ5kBOeYQBX5+8Aa/OZQw==
+
+drand-client@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/drand-client/-/drand-client-1.1.0.tgz#f04338048ff76496aa5f464d2f7cbffdc7a7fdb7"
+  integrity sha512-CszMNTfYxUafKp3eEJHbg5G4OO2Kh11XnWBQ8hnNYEfVybrxqsWLipagaLtT5mOXozB8aICoOCvZh3wYmTc8BQ==
+  dependencies:
+    "@noble/bls12-381" "^1.4.0"
 
 duplexify@^4.1.2:
   version "4.1.2"
