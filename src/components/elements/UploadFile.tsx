@@ -2,6 +2,7 @@ import useDatabase from "@/hooks/useDatabase";
 import React, { useEffect, useState } from "react";
 import * as musicMetadata from "music-metadata-browser";
 import useHelia from "@/hooks/useHelia";
+import useDrand from "@/hooks/useDrand";
 
 const UploadFile = () => {
   const [fileHash, setFileHash] = useState<
@@ -11,11 +12,19 @@ const UploadFile = () => {
 
   const polybase = useDatabase();
   const helia = useHelia();
+  const { drandNode, getRandomness } = useDrand();
 
   useEffect(() => {
     if (!fileHash) return;
 
     const addRecord = async () => {
+      if (!drandNode)
+        throw new Error(
+          "drandNode not initialized. Unable to generate record id"
+        );
+      const randInt = await getRandomness();
+      console.log("randint", randInt);
+      // TODO - add randInt to record as record id
       await polybase
         .saveRecord(fileHash.fileHash, fileHash.metadata)
         .then((response) => {
