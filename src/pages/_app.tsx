@@ -60,9 +60,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             <link rel="icon" href="/favicon.ico" />
           </Head>
           <Default>
-            <main>
-              <Component {...pageProps} />
-            </main>
+            <Component {...pageProps} />
           </Default>
         </RainbowKitProvider>
       </WagmiConfig>
