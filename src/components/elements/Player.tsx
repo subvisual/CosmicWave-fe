@@ -39,39 +39,44 @@ const Player = () => {
   }, [player.current]);
 
   return (
-    <>
-      {!helia.isOnline ? (
-        <h1>🟡📡 ...</h1>
-      ) : (
+    <div className="flex justify-center items-center h-full w-full relative">
+      {helia?.isOnline && (
         <>
-          <div className="flex flex-row items-center gap-3">
-            <h1>{helia.isOnline ? "🟢" : "🔴"}</h1>
-          </div>
           <ReactPlayer
+            controls={true}
             className="hidden"
-            controls={false}
             ref={player}
             url={srcUrl}
             playing={true}
             muted={isMuted}
-            loop={false}
+            loop={true}
           />
+          <div
+            className="flex justify-center items-center h-full w-full absolute z-0 "
+            style={{
+              background: `radial-gradient(${
+                isMuted ? "#94A191" : "#FF5133"
+              }, transparent 60%)`,
+              filter: "blur(200px)",
+              transition: "background-color 5s ease",
+            }}
+          ></div>
           <button
-            className="rounded-full drop-shadow-md bg-purple-400 hover:bg-purple-400 active:bg-purple-400 active:drop-shadow-sm"
+            className="flex rounded-full drop-shadow-xl bg-white opacity-20 hover:opacity-70 active:drop-shadow-md h-32 w-32 justify-center items-center"
             onClick={silenceBtn}
           >
-            {isMuted ? (
-              <SpeakerWaveIcon onClick={silenceBtn} className="h-10 w-10 m-4" />
-            ) : (
-              <SpeakerXMarkIcon
-                onClick={silenceBtn}
-                className="h-10 w-10 m-4"
-              />
-            )}
+            {/* <PlayIcon className="h-16 w-16 text-white text-opacity-60" /> */}
           </button>
         </>
       )}
-    </>
+      <div className="fixed bottom-0 right-0 p-3">
+        {helia.isOnline ? (
+          <div className="h-2 w-2 bg-green-400 rounded-full" />
+        ) : (
+          <div className="h-2 w-2 bg-red-400 rounded-full" />
+        )}
+      </div>
+    </div>
   );
 };
 
