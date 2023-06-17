@@ -1,18 +1,11 @@
 import { Polybase } from "@polybase/client";
 import type { PublicKey } from "@polybase/client";
-import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
-import { ethPersonalSign, requestAccounts } from "@polybase/eth";
-import { usePolybase, useCollection } from "@polybase/react";
+import { ethPersonalSign } from "@polybase/eth";
+import { useSignMessage } from "wagmi";
 
 interface ForeignKey {
   collection_id: string;
   id: string;
-}
-
-interface Streamer {
-  id: string;
-  publicKey: PublicKey;
 }
 
 interface Song {
@@ -46,7 +39,7 @@ const useDatabase = (publicKey: `0x${string}`) => {
     signer: (data) => {
       return {
         h: "eth-personal-sign",
-        sig: ethPersonalSign(publicKey, data),
+        sig: ethPersonalSign(privateKey, data),
       };
     },
   });

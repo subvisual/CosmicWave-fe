@@ -1,36 +1,64 @@
-import useDatabase from "@/hooks/useDatabase";
 import React, { useEffect, useState } from "react";
 import * as musicMetadata from "music-metadata-browser";
 import useHelia from "@/hooks/useHelia";
 import useDrand from "@/hooks/useDrand";
+import { Polybase } from "@polybase/client";
+import { useSignMessage } from "wagmi";
 
 interface Props {
   publicKey: `0x${string}`;
 }
 
+const db = new Polybase({
+  defaultNamespace:
+    "pk/0x98550a271a85832718f29cf70384e551b852ada0beec830f9c682b7de22d945ad828dbc50de17194936565d27ef6da583c8e8856d7f27bbd97b34419401e5b47/SoundverseTest3",
+});
+
 const UploadFile = ({ publicKey }: Props) => {
-  const [fileHash, setFileHash] = useState<
-    { fileHash: string; metadata: any } | undefined
+  const [song, setSong] = useState<
+    | {
+        cid: string;
+        title: string;
+        artist: string;
+        filename: string;
+        duration: number;
+      }
+    | undefined
   >(undefined);
   const [error, setError] = useState<any>(null);
 
-  const polybase = useDatabase(publicKey);
   const helia = useHelia();
   const { drandNode, getRandomness } = useDrand();
+  const sign = useSignMessage();
 
   useEffect(() => {
-    if (!fileHash) return;
+    if (!song) return;
 
-    const addRecord = async () => {
+    const addSong = async () => {
       if (!drandNode)
         throw new Error(
           "drandNode not initialized. Unable to generate record id"
         );
       const randInt = await getRandomness();
       console.log("randint", randInt);
-      // TODO - add randInt to record as record id
-      await polybase
-        .saveRecord(fileHash.fileHash, fileHash.metadata)
+
+      db.signer(async (data) => {
+        return {
+          h: "eth-personal-sign",
+          sig: await sign.signMessageAsync({ message: data }),
+        };
+      });
+
+      await db
+        .collection("Song")
+        .create([
+          song.cid,
+          song.title,
+          song.artist,
+          song.filename,
+          song.duration,
+          db.collection("Streamer").record(publicKey),
+        ])
         .then((response) => {
           console.log(response);
         })
@@ -38,18 +66,23 @@ const UploadFile = ({ publicKey }: Props) => {
           setError(err);
         });
     };
-    if (fileHash) {
-      void addRecord();
+    if (song) {
+      void addSong();
     }
-  }, [fileHash]);
+  }, [song]);
 
   const captureFile = async (file: any) => {
     const _metadata = await musicMetadata.parseBlob(file);
-    const metadata = JSON.stringify({ name: file.name, ..._metadata.format });
 
     try {
       const fileCid = await helia.uploadFile(file);
-      setFileHash({ fileHash: fileCid, metadata });
+      setSong({
+        cid: fileCid,
+        title: "title",
+        artist: "artist",
+        filename: file.name,
+        duration: _metadata.format.duration!,
+      });
     } catch (err: any) {
       console.log(err);
     }
@@ -104,18 +137,18 @@ const UploadFile = ({ publicKey }: Props) => {
         </label>
       </div>
 
-      {fileHash && (
+      {song && (
         <div className="my-4">
           <a
             id="gateway-link"
             target="_blank"
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            href={`https://127.0.0.1:5001/ipfs/${fileHash.fileHash}`}
+            href={`https://127.0.0.1:5001/ipfs/${song.cid}`}
             rel="noreferrer"
             className="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white"
           >
             <span className="w-full mr-3">
-              <span className="font-bold">CID</span> {fileHash.fileHash}
+              <span className="font-bold">CID</span> {song.cid}
             </span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
