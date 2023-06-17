@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import UploadToIPFS from "@/components/modules/UploadToIPFS";
-import { useEnsAvatar, useAccount, useEnsName } from "wagmi";
+import { useEnsAvatar, useAccount, useEnsName, useSignMessage } from "wagmi";
+import { ethPersonalSignRecoverPublicKey } from "@polybase/eth";
 
 const index = () => {
+  const [publicKey, setPublicKey] = useState<`0x${string}`>();
+
   const { address } = useAccount();
+  const sig = useSignMessage({
+    message: "Sign In",
+    onSuccess: (signature) => {
+      const pk = ethPersonalSignRecoverPublicKey(signature, "Sign In");
+      setPublicKey(`0x${pk.slice(4)}`);
+    },
+  });
 
   const {
     data: ensName,
@@ -22,13 +32,19 @@ const index = () => {
     name: ensName,
   });
 
+  useEffect(() => {
+    if (!address) return;
+    sig?.signMessage();
+  }, [address]);
+
   console.log(ensAvatar);
 
   return (
     <main className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
       <div className="flex gap-1 flex-col justify-center">
         <ConnectButton />
-        {!!address && (
+
+        {!!address && !!publicKey && (
           <>
             <div className="flex flex-col text-center justify-center">
               {isAvatarLoading && <div>Fetching avatar</div>}
@@ -40,7 +56,7 @@ const index = () => {
               {isError && <div>Error fetching name</div>}
               <h1 className="text-2xl font-bold">Welcome {ensName}</h1>
             </div>
-            <UploadToIPFS />
+            <UploadToIPFS publicKey={publicKey} />
           </>
         )}
       </div>

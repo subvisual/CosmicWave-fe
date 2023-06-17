@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import UploadFile from "../elements/UploadFile";
 import FileLibrary from "../elements/FileLibrary";
 
-const UploadToIPFS = () => {
+interface Props {
+  publicKey: `0x${string}`;
+}
+
+const UploadToIPFS = (props: Props) => {
   return (
     <div>
       <div
@@ -16,7 +20,7 @@ const UploadToIPFS = () => {
           <FileLibrary />
         </div>
         <div className="col-span-1 ">
-          <UploadFile />
+          <UploadFile {...props} />
         </div>
       </div>
     </div>
