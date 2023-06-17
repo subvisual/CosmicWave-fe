@@ -1,13 +1,12 @@
-import PlayerBoilerplate from "@/components/elements/PlayerBoilerplate";
+import Home from "@/components/elements/Home";
 import Player from "@/components/elements/Player";
-import Link from "next/link";
 
-const Home = () => {
+const index = () => {
   return (
-    <div className="mx-auto py-6 px-4 h-full w-full">
-      <Player />
+    <div className="mx-auto py-6 px-4 h-full w-full bg-[url('/home_background.png')] bg-cover flex justify-center items-center z-0 ">
+      <Home />
     </div>
   );
 };
 
-export default Home;
+export default index;

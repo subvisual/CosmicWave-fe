@@ -52,7 +52,7 @@ const Player = () => {
             loop={true}
           />
           <div
-            className="flex justify-center items-center h-full w-full absolute z-0 "
+            className="flex justify-center items-center h-full w-full absolute z-0"
             style={{
               background: `radial-gradient(${
                 isMuted ? "#94A191" : "#FF5133"
@@ -67,6 +67,16 @@ const Player = () => {
           >
             {/* <PlayIcon className="h-16 w-16 text-white text-opacity-60" /> */}
           </button>
+          <div className="flex flex-row place-content-between h-fit w-full absolute z-10 bottom-0 opacity-70 ">
+            <div className="text-white">
+              <span className="font-bold mr-1">You are listening to:</span>
+              <span className="">José Pinhal</span>
+            </div>
+
+            <span className="font-light text-white">
+              Sit back, relax and enjoy your journey :)
+            </span>
+          </div>
         </>
       )}
       <div className="fixed bottom-0 right-0 p-3">
