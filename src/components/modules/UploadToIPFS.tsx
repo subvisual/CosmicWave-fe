@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import UploadFile from "../elements/UploadFile";
 import FileLibrary from "../elements/FileLibrary";
 
-const UploadToIPFS = () => {
+interface Props {
+  publicKey: `0x${string}`;
+}
+
+const UploadToIPFS = (props: Props) => {
   return (
     <div>
       <div

@@ -4,13 +4,17 @@ import * as musicMetadata from "music-metadata-browser";
 import useHelia from "@/hooks/useHelia";
 import useDrand from "@/hooks/useDrand";
 
-const UploadFile = () => {
+interface Props {
+  publicKey: `0x${string}`;
+}
+
+const UploadFile = ({ publicKey }: Props) => {
   const [fileHash, setFileHash] = useState<
     { fileHash: string; metadata: any } | undefined
   >(undefined);
   const [error, setError] = useState<any>(null);
 
-  const polybase = useDatabase();
+  const polybase = useDatabase(publicKey);
   const helia = useHelia();
   const { drandNode, getRandomness } = useDrand();
 
