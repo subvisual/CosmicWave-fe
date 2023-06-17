@@ -1,40 +1,144 @@
 import { Polybase } from "@polybase/client";
+import type { PublicKey } from "@polybase/client";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import { ethPersonalSign, requestAccounts } from "@polybase/eth";
+import { usePolybase, useCollection } from "@polybase/react";
 
-const defaultNamespace =
-  "pk/0x0de76dd111433a53057babe9cf1f1d899be2ec9ea9572a8d8304494adae3521f4913b95f0c4f9f6517c45eebfdee530e8c12f859b1b915083529efc19993e280/soundverse-boilerplate";
-const collectionName = "MusicLibrary";
-const db = new Polybase({ defaultNamespace });
+interface ForeignKey {
+  collection_id: string;
+  id: string;
+}
 
-const useDatabase = () => {
-  const { address } = useAccount();
-  const [records, setRecords] = useState<any>([]);
+interface Streamer {
+  id: string;
+  publicKey: PublicKey;
+}
 
-  const saveRecord = async (cid: string, metadata: string = "") => {
-    const result = await db
-      .collection(collectionName)
-      .create([cid, address ?? "0x0", metadata]);
-    return result;
+interface Song {
+  id: string;
+  title: string;
+  artist: string;
+  filename: string;
+  duration: number;
+  owner: ForeignKey;
+}
+
+interface Playlist {
+  id: string;
+  name: string;
+  songs: ForeignKey[];
+  owner: ForeignKey;
+}
+
+interface ActivePlaylist {
+  id: string;
+  playing: boolean;
+  startTime: number;
+  playlist: ForeignKey;
+  owner: ForeignKey;
+}
+
+const useDatabase = (publicKey: `0x${string}`) => {
+  const db = new Polybase({
+    defaultNamespace:
+      "pk/0x98550a271a85832718f29cf70384e551b852ada0beec830f9c682b7de22d945ad828dbc50de17194936565d27ef6da583c8e8856d7f27bbd97b34419401e5b47/SoundverseTest3",
+    signer: (data) => {
+      return {
+        h: "eth-personal-sign",
+        sig: ethPersonalSign(publicKey, data),
+      };
+    },
+  });
+
+  const saveSong = async (
+    cid: string,
+    title: string,
+    artist: string,
+    filename: string,
+    duration: number
+  ) => {
+    const { data: song } = await db
+      .collection<Song>("Song")
+      .create([
+        cid,
+        title,
+        artist,
+        filename,
+        duration,
+        db.collection("Streamer").record(publicKey),
+      ]);
+
+    return song;
   };
 
-  const getRecord = async (cid: string) => {
-    const result = await db.collection(collectionName).record(cid).get();
-    return result;
+  const createPlaylist = async (name: string, songsCIDs: string[]) => {
+    const songs = songsCIDs.map((cid) =>
+      db.collection<Song>("Song").record(cid)
+    );
+
+    const { data: playlist } = await db
+      .collection<Playlist>("Playlist")
+      .create([name, songs]);
+
+    return playlist;
   };
 
-  useEffect(() => {
-    if (address) {
-      db.collection(collectionName)
-        .where("owner", "==", address)
-        .onSnapshot((newDoc) => {
-          const newRecords = newDoc.data.map((doc) => doc.data);
-          setRecords(newRecords);
-        });
-    }
-  }, []);
+  const playPlaylist = async (playlistId: string, timestamp: number) => {
+    const { data: active } = await db
+      .collection<ActivePlaylist>("ActivePlaylist")
+      .record("1")
+      .call("play", [
+        db.collection<Playlist>("Playlist").record(playlistId),
+        timestamp,
+      ]);
 
-  return { saveRecord, getRecord, records };
+    return active;
+  };
+
+  const stopPlaylist = async () => {
+    const { data: active } = await db
+      .collection<ActivePlaylist>("ActivePlaylist")
+      .record("1")
+      .call("stop");
+
+    return active;
+  };
+
+  const getPlaylists = async () => {
+    const { data: playlists } = await db.collection<Playlist>("Playlist").get();
+
+    return playlists;
+  };
+
+  const getPlaylist = async (playlistId: string) => {
+    const { data: playlist } = await db
+      .collection<Playlist>("Playlist")
+      .record(playlistId)
+      .get();
+
+    if (!playlist) return;
+
+    const songs = await Promise.all(
+      playlist.songs.map(
+        async (song) =>
+          (
+            await db.collection<Song>("Song").record(song.id).get()
+          ).data
+      )
+    );
+
+    return { ...playlist, songs };
+  };
+
+  return {
+    saveSong,
+    createPlaylist,
+    playPlaylist,
+    stopPlaylist,
+    getPlaylists,
+    getPlaylist,
+  };
 };
 
 export default useDatabase;
