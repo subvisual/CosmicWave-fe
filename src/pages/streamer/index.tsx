@@ -25,7 +25,7 @@ const index = () => {
         <div className="grid grid-cols-3 gap-4 w-full">
           <div className="col-span-2 w-full">
             <div className="px-6 py-2 m-2 rounded-md border border-slate-100 border-opacity-50">
-              <FileManager />
+              <FileManager publicKey={publicKey} />
             </div>
           </div>
           <div className="col-span-1 w-full">

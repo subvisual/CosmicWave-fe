@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Button from "./Button";
+import UploadToIPFS from "./UploadToIPFS";
 
-const FileManager = () => {
+const FileManager = ({publicKey}) => {
   const songsList = [
     { checked: false, name: "song 1", cid: "123123" },
     { checked: false, name: "song 2", cid: "312312" },
@@ -31,7 +32,6 @@ const FileManager = () => {
     const newSongs = songs.map((s) => ({ ...s, checked: checkedInput }));
     setSongs(newSongs);
   };
-  const handleSubmitFiles = () => {};
 
   return (
     <div className="m-1 h-96">
@@ -63,32 +63,8 @@ const FileManager = () => {
         </div>
       </div>
       <div className="grid grid-cols-3 gap-4 w-full h-64">
-        <div className="col-span-1 px-6 py-2 m-2 rounded-md border border-slate-100 border-opacity-50">
-          <div className="w-full h-full">
-            <h1 className="text-white">Upload</h1>
-            <label
-              htmlFor="dropzone-file"
-              className="flex flex-col items-center justify-center w-full h-full cursor-pointer"
-            >
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <p className="mb-2 text-sm text-gray-100">
-                  <span className="font-semibold">Click to upload</span> or drag
-                  and drop
-                </p>
-                <p className="text-xs text-gray-100">MP3 or WAV</p>
-              </div>
-              <input
-                id="dropzone-file"
-                type="file"
-                className="hidden"
-                accept=".mp3,audio/*"
-                onChange={(e) => {
-                  handleSubmitFiles(e);
-                }}
-              />
-            </label>
-          </div>
-        </div>
+
+        <UploadToIPFS publicKey={publicKey} />
 
         <div className="col-span-2 rounded-md border border-slate-100 border-opacity-50 overflow-y overflow-y-auto h-64">
           <div>
