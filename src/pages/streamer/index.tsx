@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEnsAvatar, useAccount, useEnsName, useSignMessage } from "wagmi";
 import { ethPersonalSignRecoverPublicKey } from "@polybase/eth";
+import FileLibrary from "@/components/elements/FileLibrary";
+import PlaylistsLibrary from "@/components/elements/PlaylistsLibrary";
+import FileManager from "@/components/elements/FileManager";
 
 const index = () => {
   const [publicKey, setPublicKey] = useState<`0x${string}`>();
@@ -15,50 +18,29 @@ const index = () => {
     },
   });
 
-  const {
-    data: ensName,
-    isError,
-    isLoading,
-  } = useEnsName({
-    address,
-  });
-
-  const {
-    data: ensAvatar,
-    isError: isAvatarError,
-    isLoading: isAvatarLoading,
-  } = useEnsAvatar({
-    name: ensName,
-  });
-
   useEffect(() => {
     if (!address) return;
     sig?.signMessage();
   }, [address]);
 
-  console.log(ensAvatar);
-
   return (
-    <main className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
-      <div className="flex gap-1 flex-col justify-center">
-        <ConnectButton />
-
-        {!!address && !!publicKey && (
-          <>
-            <div className="flex flex-col text-center justify-center">
-              {isAvatarLoading && <div>Fetching avatar</div>}
-              {isAvatarError && <div>Error fetching avatar</div>}
-              {ensAvatar && (
-                <img height={50} width={50} src={ensAvatar} alt="avatar" />
-              )}
-              {isLoading && <div>Fetching name</div>}
-              {isError && <div>Error fetching name</div>}
-              <h1 className="text-2xl font-bold">Welcome {ensName}</h1>
+    <main className="mx-auto py-6 px-28 h-full w-full">
+      {!!address && !!publicKey && (
+      <div className="flex h-full w-full justify-between items-center place-content-between">
+        <div className="grid grid-cols-3 gap-4 w-full">
+          <div className="col-span-2 w-full">
+            <div className="px-6 py-2 m-2 rounded-md border border-slate-100 border-opacity-50">
+              <FileManager publicKey={publicKey} />
             </div>
-            <UploadToIPFS publicKey={publicKey} />
-          </>
-        )}
+          </div>
+          <div className="col-span-1 w-full">
+            <div className="px-6 py-2 m-2 rounded-md border border-slate-100 border-opacity-50">
+              <PlaylistsLibrary />
+            </div>
+          </div>
+        </div>
       </div>
+      )}
     </main>
   );
 };

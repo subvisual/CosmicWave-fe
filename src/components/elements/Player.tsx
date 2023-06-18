@@ -1,5 +1,6 @@
 import useDatabase from "@/hooks/useDatabase";
 import useHelia from "@/hooks/useHelia";
+import useServer from "@/hooks/useServer";
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
@@ -15,15 +16,16 @@ import ReactPlayer from "react-player";
 // };
 
 const Player = () => {
-  const polybase = useDatabase();
+  const server = useServer();
   const helia = useHelia();
-  const currentCid =
-    "bafkreifrdpnfydzopyvgpi4iieuqt4fvyu3amjj22ffinizlegriww53lq";
-  // polybase.records[0];
-
+  const [currentCid, setCurrentCid] = useState<string>();
   const [srcUrl, setSrcUrl] = useState<string>();
   const [isMuted, setIsMuted] = useState(true);
   const player = useRef();
+
+  useEffect(() => {
+    void server.now().then(setCurrentCid);
+  }, []);
 
   useEffect(() => {
     if (!currentCid) return;
@@ -31,12 +33,13 @@ const Player = () => {
   }, [currentCid]);
 
   const silenceBtn = () => {
+    if (!currentCid) setIsMuted(true);
     setIsMuted(!isMuted);
   };
 
-  useEffect(() => {
-    player.current?.seekTo(4, "seconds");
-  }, [player.current]);
+  // useEffect(() => {
+  //   player.current?.seekTo(4, "seconds");
+  // }, [player.current]);
 
   return (
     <div className="flex justify-center items-center h-full w-full relative">
