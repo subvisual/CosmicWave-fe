@@ -1,30 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import UploadToIPFS from "./UploadToIPFS";
+import useDatabase from "@/hooks/useDatabase";
 
 interface Props {
   publicKey: `0x${string}`;
 }
 
-const FileManager = ({ publicKey }: Props) => {
-  const songsList = [
-    { checked: false, name: "song 1", cid: "123123" },
-    { checked: false, name: "song 2", cid: "312312" },
-    { checked: false, name: "song 3", cid: "434234" },
-    { checked: false, name: "song 4", cid: "1231223" },
-    { checked: false, name: "song 5", cid: "312382" },
-    { checked: false, name: "song 6", cid: "434294" },
-    { checked: false, name: "song 7", cid: "1231623" },
-    { checked: false, name: "song 8", cid: "3123412" },
-    { checked: false, name: "song 9", cid: "43427634" },
-  ];
+interface Song {
+  id: string,
+  title: string,
+  artist: string,
+  filename: string,
+  duration: Number,
+  checked: boolean,
+  owner: Object,
+}
 
-  const [songs, setSongs] = useState(songsList);
+const FileManager = ({ publicKey }: Props) => {
+  const { getSongs } = useDatabase(publicKey);
+
+  const [songs, setSongs] = useState<Song[]>([]);
+
+  useEffect(() => {
+    getSongs().then(songs => {
+
+      if (!songs) { return; }
+
+      let song_data = songs.map(song => ({...song["data"], checked: false} ));
+
+      setSongs(song_data);
+    });
+  }, []);
 
   const handleAddToPlaylistButtonClick = (e: any) => {
     const songId = e.target.id;
     const checkedInput = e.target.checked;
-    const selectedSong = songs.filter((s) => s.cid === songId);
+    const selectedSong = songs.filter((s) => s.id === songId);
     const newSongs = selectedSong
       ? [...songs, { ...selectedSong[0], checked: checkedInput }]
       : songs;
@@ -75,11 +87,11 @@ const FileManager = ({ publicKey }: Props) => {
             <ul className="w-full">
               {songs.map((song) => (
                 <li
-                  key={song.cid}
+                  key={song.id}
                   className="w-full flex items-center py-3 hover:bg-slate-700 hover:bg-opacity-50 cursor-pointer pl-7"
                 >
                   <input
-                    id={song.cid}
+                    id={song.id}
                     type="checkbox"
                     checked={song.checked}
                     onChange={handleAddToPlaylistButtonClick}
@@ -89,7 +101,7 @@ const FileManager = ({ publicKey }: Props) => {
                     htmlFor="vue-checkbox"
                     className="w-full py-3 ml-2 text-sm font-light text-gray-100"
                   >
-                    {song.name}
+                    {song.title}
                   </label>
                 </li>
               ))}

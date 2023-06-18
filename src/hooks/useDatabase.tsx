@@ -124,6 +124,12 @@ const useDatabase = (publicKey: `0x${string}`) => {
     return { ...playlist, songs };
   };
 
+  const getSongs = async () => {
+    const { data: songs } = await db.collection<Song>("Song").get();
+
+    return songs;
+  };
+
   return {
     saveSong,
     createPlaylist,
@@ -131,6 +137,7 @@ const useDatabase = (publicKey: `0x${string}`) => {
     stopPlaylist,
     getPlaylists,
     getPlaylist,
+    getSongs,
   };
 };
 

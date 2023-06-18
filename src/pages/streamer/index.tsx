@@ -18,9 +18,14 @@ const index = () => {
     },
   });
 
+  useEffect(() => {
+    if (!address) return;
+    sig?.signMessage();
+  }, [address]);
+
   return (
     <main className="mx-auto py-6 px-28 h-full w-full">
-      {/* {!!address && !!publicKey && ( */}
+      {!!address && !!publicKey && (
       <div className="flex h-full w-full justify-between items-center place-content-between">
         <div className="grid grid-cols-3 gap-4 w-full">
           <div className="col-span-2 w-full">
@@ -35,7 +40,7 @@ const index = () => {
           </div>
         </div>
       </div>
-      {/* )} */}
+      )}
     </main>
   );
 };
