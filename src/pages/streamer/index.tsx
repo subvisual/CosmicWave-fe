@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import UploadToIPFS from "@/components/modules/UploadToIPFS";
 import { useEnsAvatar, useAccount, useEnsName, useSignMessage } from "wagmi";
 import { ethPersonalSignRecoverPublicKey } from "@polybase/eth";
 

@@ -1,5 +1,6 @@
 import { ConnectButton as CB } from "@rainbow-me/rainbowkit";
 import Button from "@/components/elements/Button";
+import { WalletIcon } from "@heroicons/react/24/outline";
 export const ConnectButton = () => {
   return (
     <CB.Custom>
@@ -52,6 +53,16 @@ export const ConnectButton = () => {
                     variant="secondary"
                     handleClick={openAccountModal}
                   >
+                    {account.ensAvatar ? (
+                      <img
+                        className="h-6 w-6 rounded-full mr-2"
+                        src={account.ensAvatar}
+                        alt="wallet icon"
+                      />
+                    ) : (
+                      <WalletIcon className="h-5 w-5 rounded-full mr-2" />
+                    )}
+
                     {account.displayName}
                   </Button>
                 </div>
