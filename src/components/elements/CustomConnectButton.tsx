@@ -2,6 +2,28 @@ import { ConnectButton as CB } from "@rainbow-me/rainbowkit";
 import Button from "@/components/elements/Button";
 import { WalletIcon } from "@heroicons/react/24/outline";
 export const ConnectButton = () => {
+  // TODO - add avatar and name when connected
+  // const {
+  //   data: ensName,
+  //   isError,
+  //   isLoading,
+  // } = useEnsName({
+  //   address,
+  // });
+
+  // const {
+  //   data: ensAvatar,
+  //   isError: isAvatarError,
+  //   isLoading: isAvatarLoading,
+  // } = useEnsAvatar({
+  //   name: ensName,
+  // });
+
+  // useEffect(() => {
+  //   if (!address) return;
+  //   sig?.signMessage();
+  // }, [address]);
+
   return (
     <CB.Custom>
       {({
