@@ -20,7 +20,7 @@ export default function Button({
   const variantClasses = {
     primary: "bg-slate-200 text-white hover:bg-slate-300",
     secondary:
-      "bg-white text-slate-600 ring-1 ring-inset ring-slate-300 hover:bg-slate-50",
+      "bg-transparent text-slate-100 ring-1 ring-inset ring-slate-300 hover:bg-slate-100 hover:bg-opacity-20",
   };
 
   return (
