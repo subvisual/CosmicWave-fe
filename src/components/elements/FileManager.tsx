@@ -8,13 +8,13 @@ interface Props {
 }
 
 interface Song {
-  id: string,
-  title: string,
-  artist: string,
-  filename: string,
-  duration: Number,
-  checked: boolean,
-  owner: Object,
+  id: string;
+  title: string;
+  artist: string;
+  filename: string;
+  duration: number;
+  checked: boolean;
+  owner: Object;
 }
 
 const FileManager = ({ publicKey }: Props) => {
@@ -23,15 +23,18 @@ const FileManager = ({ publicKey }: Props) => {
   const [songs, setSongs] = useState<Song[]>([]);
 
   useEffect(() => {
-    getSongs().then(songs => {
+    getSongs()
+      .then((songs) => {
+        if (!songs) {
+          return;
+        }
 
-      if (!songs) { return; }
+        const songData = songs.map((song) => ({ ...song, checked: false }));
 
-      let song_data = songs.map(song => ({...song["data"], checked: false} ));
-
-      setSongs(song_data);
-    });
-  }, []);
+        setSongs(songData);
+      })
+      .catch(console.error);
+  }, []);
 
   const handleAddToPlaylistButtonClick = (e: any) => {
     const songId = e.target.id;
@@ -79,7 +82,6 @@ const FileManager = ({ publicKey }: Props) => {
         </div>
       </div>
       <div className="grid grid-cols-3 gap-4 w-full h-64">
-
         <UploadToIPFS publicKey={publicKey} />
 
         <div className="col-span-2 rounded-md border border-slate-100 border-opacity-50 overflow-y overflow-y-auto h-64">
@@ -101,7 +103,7 @@ const FileManager = ({ publicKey }: Props) => {
                     htmlFor="vue-checkbox"
                     className="w-full py-3 ml-2 text-sm font-light text-gray-100"
                   >
-                    {song.title}
+                    {song.filename}
                   </label>
                 </li>
               ))}
