@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import Button from "./Button";
 import UploadToIPFS from "./UploadToIPFS";
 
-const FileManager = ({publicKey}) => {
+interface Props {
+  publicKey: `0x${string}`;
+}
+
+const FileManager = ({ publicKey }: Props) => {
   const songsList = [
     { checked: false, name: "song 1", cid: "123123" },
     { checked: false, name: "song 2", cid: "312312" },
