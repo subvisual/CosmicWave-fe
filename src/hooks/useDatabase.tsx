@@ -127,7 +127,7 @@ const useDatabase = (publicKey: `0x${string}`) => {
   const getSongs = async () => {
     const { data: songs } = await db.collection<Song>("Song").get();
 
-    return songs;
+    return songs.map((song) => ({ ...song.data }));
   };
 
   return {
