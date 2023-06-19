@@ -75,6 +75,22 @@ const useHelia = () => {
     void init();
   }, [helia]);
 
+  useEffect(() => {
+    if (!helia) return;
+
+    helia.libp2p.addEventListener("peer:discovery", (evt: any) => {
+      const peerInfo = evt.detail;
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      console.log(`Found peer ${peerInfo.id.toString()}`);
+
+      // dial them when we discover them
+      helia.libp2p.dial(peerInfo.id).catch((err: any) => {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        console.log(`Could not dial ${peerInfo.id.toString()}`, err);
+      });
+    });
+  }, [helia]);
+
   const fs = unixfs(helia);
 
   const uploadFile = async (file: File) => {
