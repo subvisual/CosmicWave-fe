@@ -22,7 +22,7 @@ interface Playing {
   total_duration: number;
   current_timestamp: number;
   song_cids: string[];
-  // song_names: string[];
+  song_names: string[];
   current_song: { filename: string; id: string; timestamp: string };
 }
 
@@ -108,8 +108,7 @@ const Player = () => {
                 <>
                   <span className="font-bold mr-1">You are listening to:</span>
                   <span className="">
-                    unknown{" "}
-                    {/* {currentSong?.song_names?[currentlyPlayingIndex]} */}
+                    {currentSong?.song_names[currentlyPlayingIndex]}
                   </span>
                 </>
               )}
