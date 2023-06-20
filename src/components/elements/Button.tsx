@@ -3,7 +3,7 @@ import classNames from "classnames";
 interface Props {
   type: "button" | "submit";
   disabled?: boolean;
-  handleClick?: () => void;
+  handleClick?: (e: any) => void;
   variant?: "primary" | "secondary";
   extraClass?: string;
   children: string | React.ReactNode;

@@ -57,7 +57,8 @@ const Player = () => {
 
   const computeNextSong = () => {
     if (!srcUrl && !player.current) return;
-    setCurrentlyPlayingIndex((currentlyPlayingIndex + 1) % srcUrl.length);
+    srcUrl &&
+      setCurrentlyPlayingIndex((currentlyPlayingIndex + 1) % srcUrl.length);
   };
 
   return (
@@ -67,7 +68,7 @@ const Player = () => {
           <ReactPlayer
             controls={false}
             className="hidden"
-            ref={player}
+            ref={(player.current = this)}
             url={srcUrl?.[currentlyPlayingIndex]}
             playing={true}
             muted={isMuted}
