@@ -15,25 +15,38 @@ import ReactPlayer from "react-player";
 //   setCurrentAudio(audioBlob);
 // };
 
+type Song = {
+  total_duration: number;
+  current_timestamp: number;
+  song_cids: string[];
+};
+
 const Player = () => {
   const server = useServer();
   const helia = useHelia();
-  const [currentCid, setCurrentCid] = useState<string>();
-  const [srcUrl, setSrcUrl] = useState<string>();
+  const [currentSong, setCurrentSong] = useState<Song>();
+  const [srcUrl, setSrcUrl] = useState<string[]>();
   const [isMuted, setIsMuted] = useState(true);
   const player = useRef();
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
 
   useEffect(() => {
-    void server.now().then(setCurrentCid);
+    void server.now().then(setCurrentSong);
   }, []);
 
   useEffect(() => {
-    if (!currentCid) return;
-    setSrcUrl(`https://ipfs.io/ipfs/${currentCid}`);
-  }, [currentCid]);
+    if (!currentSong) return;
+    const cidsList = currentSong?.song_cids.map(
+      (cid: string) => `https://ipfs.io/ipfs/${cid}`
+    );
+    // setSrcUrl(cidsList);
+    setSrcUrl([
+      "https://ipfs.io/ipfs/bafkreih2faqck3zm2pzn6a72er6xwaphtu76pfbujkw45iem5ydlztr4sq",
+    ]);
+  }, [currentSong]);
 
   const silenceBtn = () => {
-    if (!currentCid) setIsMuted(true);
+    if (!currentSong) setIsMuted(true);
     setIsMuted(!isMuted);
   };
 
@@ -46,10 +59,10 @@ const Player = () => {
       {helia?.isOnline && (
         <>
           <ReactPlayer
-            controls={true}
+            controls={false}
             className="hidden"
             ref={player}
-            url={srcUrl}
+            url={srcUrl?.[currentlyPlaying]}
             playing={true}
             muted={isMuted}
             loop={true}
@@ -67,9 +80,7 @@ const Player = () => {
           <button
             className="flex rounded-full drop-shadow-xl bg-white opacity-20 hover:opacity-70 active:drop-shadow-md h-32 w-32 justify-center items-center"
             onClick={silenceBtn}
-          >
-            {/* <PlayIcon className="h-16 w-16 text-white text-opacity-60" /> */}
-          </button>
+          ></button>
           <div className="flex flex-row place-content-between h-fit w-full absolute z-10 bottom-0 opacity-70 ">
             <div className="text-white">
               <span className="font-bold mr-1">You are listening to:</span>
