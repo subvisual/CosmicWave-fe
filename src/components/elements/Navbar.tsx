@@ -9,8 +9,8 @@ import { useRouter } from "next/router";
 function Navbar() {
   const { address } = useAccount();
   const router = useRouter();
-  // todo: check if is a streamer
-  const isStreamer = true;
+
+  const isStreamer = address === "0x26663F46Bb55702fE9dCB6A6068dFf18Cc9b41DE";
 
   return (
     <div className="w-full py-8 px-28 absolute z-10">
@@ -20,16 +20,6 @@ function Navbar() {
           {isStreamer && (
             <>
               <Link
-                key="Listen"
-                href="/player"
-                className={classnames(
-                  router.pathname === "/player" ? "font-bold" : "font-light",
-                  "text-sm  text-center cursor-pointer text-white "
-                )}
-              >
-                Listen
-              </Link>
-              <Link
                 key="Stream"
                 href="/streamer"
                 className={classnames(
@@ -38,6 +28,16 @@ function Navbar() {
                 )}
               >
                 Stream
+              </Link>
+              <Link
+                key="Listen"
+                href="/player"
+                className={classnames(
+                  router.pathname === "/player" ? "font-bold" : "font-light",
+                  "text-sm  text-center cursor-pointer text-white "
+                )}
+              >
+                Listen
               </Link>
             </>
           )}
