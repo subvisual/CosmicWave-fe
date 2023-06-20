@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import UploadToIPFS from "./UploadToIPFS";
-import useDatabase from "@/hooks/useDatabase";
+import { useSignMessage } from "wagmi";
+import { Polybase } from "@polybase/client";
 
 interface Props {
   publicKey: `0x${string}`;
@@ -17,32 +18,35 @@ interface Song {
   owner: Object;
 }
 
+const db = new Polybase({
+  defaultNamespace:
+    "pk/0x98550a271a85832718f29cf70384e551b852ada0beec830f9c682b7de22d945ad828dbc50de17194936565d27ef6da583c8e8856d7f27bbd97b34419401e5b47/SoundverseTest3",
+});
+
 const FileManager = ({ publicKey }: Props) => {
-  const { getSongs } = useDatabase(publicKey);
+  const sign = useSignMessage();
 
   const [songs, setSongs] = useState<Song[]>([]);
 
+  const songsCollection = db.collection<Song>("Song");
+
   useEffect(() => {
-    getSongs()
-      .then((songs) => {
-        if (!songs) {
-          return;
-        }
+    songsCollection?.onSnapshot((changes) => {
+      const songData = changes.data.map((song) => ({
+        ...song.data,
+        checked: false,
+      }));
 
-        const songData = songs.map((song) => ({ ...song, checked: false }));
-
-        setSongs(songData);
-      })
-      .catch(console.error);
-  }, []);
+      setSongs(songData);
+    });
+  }, [songsCollection]);
 
   const handleAddToPlaylistButtonClick = (e: any) => {
     const songId = e.target.id;
     const checkedInput = e.target.checked;
-    const selectedSong = songs.filter((s) => s.id === songId);
-    const newSongs = selectedSong
-      ? [...songs, { ...selectedSong[0], checked: checkedInput }]
-      : songs;
+    const newSongs = songs.map((song) =>
+      song.id === songId ? { ...song, checked: checkedInput } : song
+    );
     setSongs(newSongs);
   };
 
@@ -52,11 +56,31 @@ const FileManager = ({ publicKey }: Props) => {
     setSongs(newSongs);
   };
 
+  const handleAddToPlaylist = async () => {
+    db.signer(async (data) => {
+      return {
+        h: "eth-personal-sign",
+        sig: await sign.signMessageAsync({ message: data }),
+      };
+    });
+
+    const songIds = songs
+      .filter((s) => !!s.checked)
+      .map((song) => db.collection("Song").record(song.id));
+
+    console.log(songIds);
+
+    await db
+      .collection("Playlist")
+      .record("My Amazing Playlist")
+      .call("setSongs", [songIds]);
+  };
+
   return (
     <div className="m-1 h-96">
       <div className="flex flex-row place-content-between items-center group">
         <h1 className="text-white text-2xl mb-5">Files</h1>
-        <Button type="button" handleClick={handleAddToPlaylistButtonClick}>
+        <Button type="button" handleClick={handleAddToPlaylist}>
           <span className="text-slate-900">Add to playlist</span>
         </Button>
       </div>

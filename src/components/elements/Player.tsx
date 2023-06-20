@@ -15,11 +15,11 @@ import ReactPlayer from "react-player";
 //   setCurrentAudio(audioBlob);
 // };
 
-type Song = {
+interface Song {
   total_duration: number;
   current_timestamp: number;
   song_cids: string[];
-};
+}
 
 const Player = () => {
   const server = useServer();
