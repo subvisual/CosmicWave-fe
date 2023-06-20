@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import UploadToIPFS from "./UploadToIPFS";
-import useDatabase from "@/hooks/useDatabase";
 import { useSignMessage } from "wagmi";
 import { Polybase } from "@polybase/client";
 
@@ -25,24 +24,22 @@ const db = new Polybase({
 });
 
 const FileManager = ({ publicKey }: Props) => {
-  const { getSongs } = useDatabase(publicKey);
   const sign = useSignMessage();
 
   const [songs, setSongs] = useState<Song[]>([]);
 
+  const songsCollection = db.collection<Song>("Song");
+
   useEffect(() => {
-    getSongs()
-      .then((songs) => {
-        if (!songs) {
-          return;
-        }
+    songsCollection?.onSnapshot((changes) => {
+      const songData = changes.data.map((song) => ({
+        ...song.data,
+        checked: false,
+      }));
 
-        const songData = songs.map((song) => ({ ...song, checked: false }));
-
-        setSongs(songData);
-      })
-      .catch(console.error);
-  }, []);
+      setSongs(songData);
+    });
+  }, [songsCollection]);
 
   const handleAddToPlaylistButtonClick = (e: any) => {
     const songId = e.target.id;
