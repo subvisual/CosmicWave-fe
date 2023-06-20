@@ -15,7 +15,7 @@ interface Song {
   filename: string;
   duration: number;
   checked: boolean;
-  owner: Object;
+  owner: any;
 }
 
 const db = new Polybase({
@@ -80,7 +80,12 @@ const FileManager = ({ publicKey }: Props) => {
     <div className="m-1 h-96">
       <div className="flex flex-row place-content-between items-center group">
         <h1 className="text-white text-2xl mb-5">Files</h1>
-        <Button type="button" handleClick={handleAddToPlaylist}>
+        <Button
+          type="button"
+          handleClick={() => {
+            void handleAddToPlaylist();
+          }}
+        >
           <span className="text-slate-900">Add to playlist</span>
         </Button>
       </div>

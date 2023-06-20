@@ -76,7 +76,7 @@ const PlaylistsLibrary = () => {
         </div>
       ) : (
         <h1 className="text-white font-md font-light">
-          Looks like you don't have a playlist yet.
+          Looks like you don´t have a playlist yet.
         </h1>
       )}
     </div>
