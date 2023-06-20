@@ -26,20 +26,20 @@ const index = () => {
   return (
     <main className="mx-auto py-6 px-28 h-full w-full">
       {!!address && !!publicKey && (
-      <div className="flex h-full w-full justify-between items-center place-content-between">
-        <div className="grid grid-cols-3 gap-4 w-full">
-          <div className="col-span-2 w-full">
-            <div className="px-6 py-2 m-2 rounded-md border border-slate-100 border-opacity-50">
-              <FileManager publicKey={publicKey} />
+        <div className="flex h-full w-full justify-between items-center place-content-between">
+          <div className="grid grid-cols-3 gap-4 w-full">
+            <div className="col-span-2 w-full">
+              <div className="px-6 py-2 m-2 rounded-md border border-slate-100 border-opacity-50">
+                <FileManager publicKey={publicKey} />
+              </div>
             </div>
-          </div>
-          <div className="col-span-1 w-full">
-            <div className="px-6 py-2 m-2 rounded-md border border-slate-100 border-opacity-50">
-              <PlaylistsLibrary />
+            <div className="col-span-1 w-full">
+              <div className="px-6 py-2 m-2 rounded-md border border-slate-100 border-opacity-50">
+                <PlaylistsLibrary />
+              </div>
             </div>
           </div>
         </div>
-      </div>
       )}
     </main>
   );
