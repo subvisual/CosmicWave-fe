@@ -28,7 +28,7 @@ const Player = () => {
   const [srcUrl, setSrcUrl] = useState<string[]>();
   const [isMuted, setIsMuted] = useState(true);
   const player = useRef();
-  const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
+  const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState(0);
 
   useEffect(() => {
     void server.now().then(setCurrentSong);
@@ -41,6 +41,7 @@ const Player = () => {
     );
     // setSrcUrl(cidsList);
     setSrcUrl([
+      "https://ipfs.io/ipfs/bafkreiacirmq6k2lznrdkk2xjz4l5kka5dmjz6tjqi5vechpjrb6bk6liq",
       "https://ipfs.io/ipfs/bafkreih2faqck3zm2pzn6a72er6xwaphtu76pfbujkw45iem5ydlztr4sq",
     ]);
   }, [currentSong]);
@@ -54,6 +55,12 @@ const Player = () => {
   //   player.current?.seekTo(4, "seconds");
   // }, [player.current]);
 
+  const computeNextSong = () => {
+    if (!srcUrl && !player.current) return;
+    srcUrl &&
+      setCurrentlyPlayingIndex((currentlyPlayingIndex + 1) % srcUrl.length);
+  };
+
   return (
     <div className="flex justify-center items-center h-full w-full relative">
       {helia?.isOnline && (
@@ -61,11 +68,12 @@ const Player = () => {
           <ReactPlayer
             controls={false}
             className="hidden"
-            ref={player}
-            url={srcUrl?.[currentlyPlaying]}
+            ref={(player.current = this)}
+            url={srcUrl?.[currentlyPlayingIndex]}
             playing={true}
             muted={isMuted}
-            loop={true}
+            loop={false}
+            onEnded={computeNextSong}
           />
           <div
             className="flex justify-center items-center h-full w-full absolute z-0"

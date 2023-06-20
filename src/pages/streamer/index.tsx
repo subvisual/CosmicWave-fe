@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useEnsAvatar, useAccount, useEnsName, useSignMessage } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 import { ethPersonalSignRecoverPublicKey } from "@polybase/eth";
-import FileLibrary from "@/components/elements/FileLibrary";
 import PlaylistsLibrary from "@/components/elements/PlaylistsLibrary";
 import FileManager from "@/components/elements/FileManager";
 
