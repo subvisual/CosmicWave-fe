@@ -1,9 +1,10 @@
-import useDatabase from "@/hooks/useDatabase";
 import useHelia from "@/hooks/useHelia";
 import useServer from "@/hooks/useServer";
-import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
+
 import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
+import Icon from "./Icon";
+import GlowBackground from "./GlowBackground";
 
 //  useEffect(() => {
 //     if (!helia.isOnline) return;
@@ -15,19 +16,21 @@ import ReactPlayer from "react-player";
 //   setCurrentAudio(audioBlob);
 // };
 
-interface Song {
+interface Playing {
   total_duration: number;
   current_timestamp: number;
   song_cids: string[];
+  song_names: string[];
+  current_song: { filename: string; id: string; timestamp: string };
 }
 
 const Player = () => {
   const server = useServer();
   const helia = useHelia();
-  const [currentSong, setCurrentSong] = useState<Song>();
-  const [srcUrl, setSrcUrl] = useState<string[]>();
+  const player = useRef<any>();
+  const [currentSong, setCurrentSong] = useState<Playing>();
+  const [srcUrls, setSrcUrls] = useState<string[]>();
   const [isMuted, setIsMuted] = useState(true);
-  const player = useRef();
   const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState(0);
 
   useEffect(() => {
@@ -36,29 +39,43 @@ const Player = () => {
 
   useEffect(() => {
     if (!currentSong) return;
-    const cidsList = currentSong?.song_cids.map(
-      (cid: string) => `https://ipfs.io/ipfs/${cid}`
-    );
-    // setSrcUrl(cidsList);
-    setSrcUrl([
+    // const cidsList = currentSong?.song_cids.map(
+    //   (cid: string) => `https://ipfs.io/ipfs/${cid}`
+    // );
+    const cidsList = [
       "https://ipfs.io/ipfs/bafkreiacirmq6k2lznrdkk2xjz4l5kka5dmjz6tjqi5vechpjrb6bk6liq",
       "https://ipfs.io/ipfs/bafkreih2faqck3zm2pzn6a72er6xwaphtu76pfbujkw45iem5ydlztr4sq",
-    ]);
+    ];
+
+    const index = cidsList.findIndex(
+      (cid) =>
+        cid ===
+        `https://ipfs.io/ipfs/bafkreiacirmq6k2lznrdkk2xjz4l5kka5dmjz6tjqi5vechpjrb6bk6liq`
+      // cid === `https://ipfs.io/ipfs/${currentSong?.current_song?.id}`
+    );
+
+    setSrcUrls(cidsList);
+    setCurrentlyPlayingIndex(index);
+
+    player.current?.seekTo(currentSong?.current_song.timestamp ?? 0, "seconds");
   }, [currentSong]);
 
   const silenceBtn = () => {
-    if (!currentSong) setIsMuted(true);
+    if (currentlyPlayingIndex < 0) {
+      setIsMuted(true);
+      return;
+    }
     setIsMuted(!isMuted);
   };
 
-  // useEffect(() => {
-  //   player.current?.seekTo(4, "seconds");
-  // }, [player.current]);
-
   const computeNextSong = () => {
-    if (!srcUrl && !player.current) return;
-    srcUrl &&
-      setCurrentlyPlayingIndex((currentlyPlayingIndex + 1) % srcUrl.length);
+    if (!srcUrls && !player.current) return;
+    if (srcUrls && currentlyPlayingIndex + 1 < srcUrls.length) {
+      setCurrentlyPlayingIndex(currentlyPlayingIndex + 1);
+    } else {
+      setCurrentlyPlayingIndex(-1);
+      setIsMuted(true);
+    }
   };
 
   return (
@@ -69,30 +86,30 @@ const Player = () => {
             controls={false}
             className="hidden"
             ref={(player.current = this)}
-            url={srcUrl?.[currentlyPlayingIndex]}
+            url={srcUrls?.[currentlyPlayingIndex]}
             playing={true}
             muted={isMuted}
             loop={false}
+            volume={0.3}
             onEnded={computeNextSong}
           />
-          <div
-            className="flex justify-center items-center h-full w-full absolute z-0"
-            style={{
-              background: `radial-gradient(${
-                isMuted ? "#94A191" : "#FF5133"
-              }, transparent 60%)`,
-              filter: "blur(200px)",
-              transition: "background-color 5s ease",
-            }}
-          ></div>
+          <GlowBackground isMuted={isMuted} />
           <button
             className="flex rounded-full drop-shadow-xl bg-white opacity-20 hover:opacity-70 active:drop-shadow-md h-32 w-32 justify-center items-center"
             onClick={silenceBtn}
-          ></button>
+          >
+            <Icon isMuted={isMuted} />
+          </button>
           <div className="flex flex-row place-content-between h-fit w-full absolute z-10 bottom-0 opacity-70 ">
             <div className="text-white">
-              <span className="font-bold mr-1">You are listening to:</span>
-              <span className="">José Pinhal</span>
+              {currentlyPlayingIndex > -1 && (
+                <>
+                  <span className="font-bold mr-1">You are listening to:</span>
+                  <span className="">
+                    {currentSong?.song_names[currentlyPlayingIndex]}
+                  </span>
+                </>
+              )}
             </div>
 
             <span className="font-light text-white">

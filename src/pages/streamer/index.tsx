@@ -3,8 +3,10 @@ import { useAccount, useSignMessage } from "wagmi";
 import { ethPersonalSignRecoverPublicKey } from "@polybase/eth";
 import PlaylistsLibrary from "@/components/elements/PlaylistsLibrary";
 import FileManager from "@/components/elements/FileManager";
+import { useRouter } from "next/router";
 
 const index = () => {
+  const { push } = useRouter();
   const [publicKey, setPublicKey] = useState<`0x${string}`>();
 
   const { address } = useAccount();
@@ -17,7 +19,14 @@ const index = () => {
   });
 
   useEffect(() => {
-    if (!address) return;
+    const isStreamer = address
+      ? address === "0x26663F46Bb55702fE9dCB6A6068dFf18Cc9b41DE"
+      : false;
+    if (!isStreamer) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      push("/player");
+      return;
+    }
     sig?.signMessage();
   }, [address]);
 
