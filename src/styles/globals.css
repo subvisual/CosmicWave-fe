@@ -11,8 +11,17 @@
     @apply h-full;
   }
 
+  @font-face {
+    font-family: "PlusJakartaSans";
+    src: url("/PlusJakartaSans-VariableFont_wght.ttf");
+  }
+
   body {
     @apply bg-slate-300;
+  }
+
+  html {
+    @apply font-plusjakarta;
   }
 }
 

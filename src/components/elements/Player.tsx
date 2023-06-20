@@ -5,6 +5,8 @@ import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
 import classnames from "classnames";
 import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
+import Icon from "./Icon";
+import GlowBackground from "./GlowBackground";
 
 //  useEffect(() => {
 //     if (!helia.isOnline) return;
@@ -20,6 +22,7 @@ interface Playing {
   total_duration: number;
   current_timestamp: number;
   song_cids: string[];
+  // song_names: string[];
   current_song: { filename: string; id: string; timestamp: string };
 }
 
@@ -92,27 +95,24 @@ const Player = () => {
             volume={0.3}
             onEnded={computeNextSong}
           />
-          <div
-            className={classnames(
-              "flex justify-center items-center h-full w-full absolute z-0",
-              !isMuted && "animate-glow"
-            )}
-            style={{
-              background: `radial-gradient(${
-                isMuted ? "#94A191" : "#FF5133"
-              }, transparent 60%)`,
-              filter: "blur(200px)",
-              transition: "background-color 5s ease",
-            }}
-          ></div>
+          <GlowBackground isMuted={isMuted} />
           <button
             className="flex rounded-full drop-shadow-xl bg-white opacity-20 hover:opacity-70 active:drop-shadow-md h-32 w-32 justify-center items-center"
             onClick={silenceBtn}
-          ></button>
+          >
+            <Icon isMuted={isMuted} />
+          </button>
           <div className="flex flex-row place-content-between h-fit w-full absolute z-10 bottom-0 opacity-70 ">
             <div className="text-white">
-              <span className="font-bold mr-1">You are listening to:</span>
-              <span className="">José Pinhal</span>
+              {currentlyPlayingIndex > -1 && (
+                <>
+                  <span className="font-bold mr-1">You are listening to:</span>
+                  <span className="">
+                    unknown{" "}
+                    {/* {currentSong?.song_names?[currentlyPlayingIndex]} */}
+                  </span>
+                </>
+              )}
             </div>
 
             <span className="font-light text-white">

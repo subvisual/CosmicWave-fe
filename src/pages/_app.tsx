@@ -51,8 +51,11 @@ const App = ({ Component, pageProps }: AppProps) => {
       <WagmiConfig config={wagmiConfig}>
         <RainbowKitProvider chains={chains}>
           <Head>
-            <title>T</title>
-            <meta name="description" content="TODO" />
+            <title>Cosmicwaves</title>
+            <meta
+              name="description"
+              content="Your decentralised radio station"
+            />
             <meta
               name="viewport"
               content="width=device-width, initial-scale=1"
