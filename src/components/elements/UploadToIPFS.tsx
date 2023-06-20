@@ -109,8 +109,8 @@ const UploadToIPFS = ({ publicKey }: Props) => {
         >
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             <p className="mb-2 text-sm text-gray-100">
-              <span className="font-semibold">Click to upload</span> or drag
-              and drop
+              <span className="font-semibold">Click to upload</span> or drag and
+              drop
             </p>
             <p className="text-xs text-gray-100">MP3 or WAV</p>
           </div>

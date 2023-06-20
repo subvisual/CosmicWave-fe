@@ -1,5 +1,4 @@
 import Home from "@/components/elements/Home";
-import Player from "@/components/elements/Player";
 
 const index = () => {
   return (

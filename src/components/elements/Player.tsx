@@ -1,8 +1,6 @@
-import useDatabase from "@/hooks/useDatabase";
 import useHelia from "@/hooks/useHelia";
 import useServer from "@/hooks/useServer";
-import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
-import classnames from "classnames";
+
 import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import Icon from "./Icon";
@@ -29,7 +27,7 @@ interface Playing {
 const Player = () => {
   const server = useServer();
   const helia = useHelia();
-  const player = useRef();
+  const player = useRef<any>();
   const [currentSong, setCurrentSong] = useState<Playing>();
   const [srcUrls, setSrcUrls] = useState<string[]>();
   const [isMuted, setIsMuted] = useState(true);

@@ -1,7 +1,4 @@
 import { Polybase } from "@polybase/client";
-import type { PublicKey } from "@polybase/client";
-import { ethPersonalSign } from "@polybase/eth";
-import { useSignMessage } from "wagmi";
 
 interface ForeignKey {
   collection_id: string;
