@@ -2,6 +2,7 @@ import useDatabase from "@/hooks/useDatabase";
 import useHelia from "@/hooks/useHelia";
 import useServer from "@/hooks/useServer";
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
+import classnames from "classnames";
 import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 
@@ -59,7 +60,10 @@ const Player = () => {
   }, [currentSong]);
 
   const silenceBtn = () => {
-    if (!currentSong) setIsMuted(true);
+    if (currentlyPlayingIndex < 0) {
+      setIsMuted(true);
+      return;
+    }
     setIsMuted(!isMuted);
   };
 
@@ -69,6 +73,7 @@ const Player = () => {
       setCurrentlyPlayingIndex(currentlyPlayingIndex + 1);
     } else {
       setCurrentlyPlayingIndex(-1);
+      setIsMuted(true);
     }
   };
 
@@ -80,7 +85,7 @@ const Player = () => {
             controls={false}
             className="hidden"
             ref={(player.current = this)}
-            url={srcUrl?.[currentlyPlayingIndex]}
+            url={srcUrls?.[currentlyPlayingIndex]}
             playing={true}
             muted={isMuted}
             loop={false}
@@ -88,7 +93,10 @@ const Player = () => {
             onEnded={computeNextSong}
           />
           <div
-            className="flex justify-center items-center h-full w-full absolute z-0"
+            className={classnames(
+              "flex justify-center items-center h-full w-full absolute z-0",
+              !isMuted && "animate-glow"
+            )}
             style={{
               background: `radial-gradient(${
                 isMuted ? "#94A191" : "#FF5133"
