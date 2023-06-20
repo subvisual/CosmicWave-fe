@@ -15,19 +15,20 @@ import ReactPlayer from "react-player";
 //   setCurrentAudio(audioBlob);
 // };
 
-interface Song {
+interface Playing {
   total_duration: number;
   current_timestamp: number;
   song_cids: string[];
+  current_song: { filename: string; id: string; timestamp: string };
 }
 
 const Player = () => {
   const server = useServer();
   const helia = useHelia();
-  const [currentSong, setCurrentSong] = useState<Song>();
-  const [srcUrl, setSrcUrl] = useState<string[]>();
-  const [isMuted, setIsMuted] = useState(true);
   const player = useRef();
+  const [currentSong, setCurrentSong] = useState<Playing>();
+  const [srcUrls, setSrcUrls] = useState<string[]>();
+  const [isMuted, setIsMuted] = useState(true);
   const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState(0);
 
   useEffect(() => {
@@ -36,14 +37,25 @@ const Player = () => {
 
   useEffect(() => {
     if (!currentSong) return;
-    const cidsList = currentSong?.song_cids.map(
-      (cid: string) => `https://ipfs.io/ipfs/${cid}`
-    );
-    // setSrcUrl(cidsList);
-    setSrcUrl([
+    // const cidsList = currentSong?.song_cids.map(
+    //   (cid: string) => `https://ipfs.io/ipfs/${cid}`
+    // );
+    const cidsList = [
       "https://ipfs.io/ipfs/bafkreiacirmq6k2lznrdkk2xjz4l5kka5dmjz6tjqi5vechpjrb6bk6liq",
       "https://ipfs.io/ipfs/bafkreih2faqck3zm2pzn6a72er6xwaphtu76pfbujkw45iem5ydlztr4sq",
-    ]);
+    ];
+
+    const index = cidsList.findIndex(
+      (cid) =>
+        cid ===
+        `https://ipfs.io/ipfs/bafkreiacirmq6k2lznrdkk2xjz4l5kka5dmjz6tjqi5vechpjrb6bk6liq`
+      // cid === `https://ipfs.io/ipfs/${currentSong?.current_song?.id}`
+    );
+
+    setSrcUrls(cidsList);
+    setCurrentlyPlayingIndex(index);
+
+    player.current?.seekTo(currentSong?.current_song.timestamp ?? 0, "seconds");
   }, [currentSong]);
 
   const silenceBtn = () => {
@@ -51,14 +63,13 @@ const Player = () => {
     setIsMuted(!isMuted);
   };
 
-  // useEffect(() => {
-  //   player.current?.seekTo(4, "seconds");
-  // }, [player.current]);
-
   const computeNextSong = () => {
-    if (!srcUrl && !player.current) return;
-    srcUrl &&
-      setCurrentlyPlayingIndex((currentlyPlayingIndex + 1) % srcUrl.length);
+    if (!srcUrls && !player.current) return;
+    if (srcUrls && currentlyPlayingIndex + 1 < srcUrls.length) {
+      setCurrentlyPlayingIndex(currentlyPlayingIndex + 1);
+    } else {
+      setCurrentlyPlayingIndex(-1);
+    }
   };
 
   return (
@@ -73,6 +84,7 @@ const Player = () => {
             playing={true}
             muted={isMuted}
             loop={false}
+            volume={0.3}
             onEnded={computeNextSong}
           />
           <div
