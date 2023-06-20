@@ -36,12 +36,6 @@ const useDatabase = (publicKey: `0x${string}`) => {
   const db = new Polybase({
     defaultNamespace:
       "pk/0x98550a271a85832718f29cf70384e551b852ada0beec830f9c682b7de22d945ad828dbc50de17194936565d27ef6da583c8e8856d7f27bbd97b34419401e5b47/SoundverseTest3",
-    signer: (data) => {
-      return {
-        h: "eth-personal-sign",
-        sig: ethPersonalSign(privateKey, data),
-      };
-    },
   });
 
   const saveSong = async (

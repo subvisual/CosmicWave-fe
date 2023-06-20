@@ -39,10 +39,9 @@ const FileManager = ({ publicKey }: Props) => {
   const handleAddToPlaylistButtonClick = (e: any) => {
     const songId = e.target.id;
     const checkedInput = e.target.checked;
-    const selectedSong = songs.filter((s) => s.id === songId);
-    const newSongs = selectedSong
-      ? [...songs, { ...selectedSong[0], checked: checkedInput }]
-      : songs;
+    const newSongs = songs.map((song) =>
+      song.id === songId ? { ...song, checked: checkedInput } : song
+    );
     setSongs(newSongs);
   };
 
