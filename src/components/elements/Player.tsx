@@ -3,7 +3,7 @@ import useServer from "@/hooks/useServer";
 
 import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
-import Icon from "./Icon";
+import BrandIcon from "./BrandIcon";
 import GlowBackground from "./GlowBackground";
 
 //  useEffect(() => {
@@ -98,7 +98,7 @@ const Player = () => {
             className="flex rounded-full drop-shadow-xl bg-white opacity-20 hover:opacity-70 active:drop-shadow-md h-32 w-32 justify-center items-center"
             onClick={silenceBtn}
           >
-            <Icon isMuted={isMuted} />
+            <BrandIcon isMuted={isMuted} />
           </button>
           <div className="flex flex-row place-content-between h-fit w-full absolute z-10 bottom-0 opacity-70 ">
             <div className="text-white">

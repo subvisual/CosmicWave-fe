@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-
+import { Icon } from "@iconify/react";
 import Button from "@/components/elements/Button";
 import { Polybase } from "@polybase/client";
 import { useSignMessage } from "wagmi";
@@ -51,35 +51,41 @@ const PlaylistsLibrary = () => {
   };
 
   return (
-    <div className="m-1">
-      <h1 className="text-white text-2xl mb-5">Playlists</h1>
-      {playlists.length > 0 ? (
-        <div>
-          <ul>
-            {playlists.map((playlist) => (
-              <li
-                key={playlist.id}
-                className="flex flex-row place-content-between items-center group"
-              >
-                <h1 className="text-white font-md font-light">{playlist.id}</h1>
-                <Button
-                  type="button"
-                  handleClick={() => {
-                    handleStreamButtonClick(playlist.id);
-                  }}
-                  extraClass="opacity-0 group-hover:opacity-100"
-                >
-                  Stream
-                </Button>
-              </li>
-            ))}
-          </ul>
+    <div className="h-[480px] flex flex-col">
+      <h1 className="text-white text-2xl mb-5 px-6 py-2 m-2">Playlists</h1>
+      {playlists.length === 0 && (
+        <div className="flex flex-col items-center justify-center pt-5 pb-6 my-auto">
+          <Icon
+            icon="pixelarticons:mood-sad"
+            className="w-8 h-8 text-white m-6"
+          />
+          <p className="mb-2 text-sm text-gray-100 text-center w-[70%]">
+            Ops, it looks like you don’t have any playlist yet. Select files on
+            the left to create a new playlist.
+          </p>
         </div>
-      ) : (
-        <h1 className="text-white font-md font-light">
-          Looks like you don´t have a playlist yet.
-        </h1>
       )}
+      <div>
+        <ul>
+          {playlists.map((playlist) => (
+            <li
+              key={playlist.id}
+              className="px-6 py-2 w-full flex flex-row place-content-between items-center group py-3 hover:bg-[#424242] hover:bg-opacity-50 cursor-pointer pl-7"
+            >
+              <h1 className="text-white font-md font-light">{playlist.id}</h1>
+              <Button
+                type="button"
+                handleClick={() => {
+                  handleStreamButtonClick(playlist.id);
+                }}
+                extraClass="opacity-0 group-hover:opacity-100"
+              >
+                <span className="text-slate-900">Stream</span>
+              </Button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

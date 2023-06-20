@@ -31,7 +31,7 @@ export default function Button({
       className={classNames(
         variantClasses[variant],
         extraClass,
-        "inline-flex items-center rounded-full selection:justify-center px-4 py-2.5 text-sm font-medium shadow-sm disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 disabled:ring-gray-200"
+        "inline-flex items-center rounded-full selection:justify-center px-4 py-2.5 text-sm font-medium shadow-sm disabled:cursor-not-allowed disabled:bg-slate-400 disabled:text-slate-400 disabled:ring-gray-200"
       )}
     >
       {children}

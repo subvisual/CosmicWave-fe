@@ -24,7 +24,7 @@ const Core = () => {
   );
 };
 
-const Icon = ({ isMuted }: { isMuted: boolean }) => {
+const BrandIcon = ({ isMuted }: { isMuted: boolean }) => {
   return (
     <svg
       width="49"
@@ -39,4 +39,4 @@ const Icon = ({ isMuted }: { isMuted: boolean }) => {
   );
 };
 
-export default Icon;
+export default BrandIcon;
