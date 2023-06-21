@@ -39,19 +39,19 @@ const Player = () => {
 
   useEffect(() => {
     if (!currentSong) return;
-    // const cidsList = currentSong?.song_cids.map(
-    //   (cid: string) => `https://ipfs.io/ipfs/${cid}`
-    // );
-    const cidsList = [
-      "https://ipfs.io/ipfs/bafkreiacirmq6k2lznrdkk2xjz4l5kka5dmjz6tjqi5vechpjrb6bk6liq",
-      "https://ipfs.io/ipfs/bafkreih2faqck3zm2pzn6a72er6xwaphtu76pfbujkw45iem5ydlztr4sq",
-    ];
+    const cidsList = currentSong?.song_cids.map(
+      (cid: string) => `https://ipfs.io/ipfs/${cid}`
+    );
+    // const cidsList = [
+    //   "https://ipfs.io/ipfs/bafkreiacirmq6k2lznrdkk2xjz4l5kka5dmjz6tjqi5vechpjrb6bk6liq",
+    //   "https://ipfs.io/ipfs/bafkreih2faqck3zm2pzn6a72er6xwaphtu76pfbujkw45iem5ydlztr4sq",
+    // ];
 
     const index = cidsList.findIndex(
       (cid) =>
-        cid ===
-        `https://ipfs.io/ipfs/bafkreiacirmq6k2lznrdkk2xjz4l5kka5dmjz6tjqi5vechpjrb6bk6liq`
-      // cid === `https://ipfs.io/ipfs/${currentSong?.current_song?.id}`
+        // cid ===
+        // `https://ipfs.io/ipfs/bafkreiacirmq6k2lznrdkk2xjz4l5kka5dmjz6tjqi5vechpjrb6bk6liq`
+        cid === `https://ipfs.io/ipfs/${currentSong?.current_song?.id}`
     );
 
     setSrcUrls(cidsList);
