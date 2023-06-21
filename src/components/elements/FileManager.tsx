@@ -4,6 +4,7 @@ import UploadToIPFS from "./UploadToIPFS";
 import { useSignMessage } from "wagmi";
 import { Polybase } from "@polybase/client";
 import { Icon } from "@iconify/react";
+import Modal from "./Modal";
 
 interface Props {
   publicKey: `0x${string}`;
@@ -29,6 +30,10 @@ const FileManager = ({ publicKey }: Props) => {
   const sign = useSignMessage();
 
   const [songs, setSongs] = useState<Song[]>([]);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
+  const [playlistName, setPlaylistName] = useState<string>(
+    "My Amazing Playlist"
+  );
 
   const songsCollection = db.collection<Song>("Song");
 
@@ -58,7 +63,8 @@ const FileManager = ({ publicKey }: Props) => {
     setSongs(newSongs);
   };
 
-  const handleAddToPlaylist = async () => {
+  const handleCreatePlaylist = async () => {
+    setModalIsOpen(false);
     db.signer(async (data) => {
       return {
         h: "eth-personal-sign",
@@ -74,92 +80,105 @@ const FileManager = ({ publicKey }: Props) => {
 
     await db
       .collection("Playlist")
-      .record("My Amazing Playlist")
+      .record(playlistName)
       .call("setSongs", [songIds]);
+
+    setPlaylistName("");
   };
 
   return (
-    <div className="m-1 h-full">
-      <div className="flex flex-row place-content-between items-center group py-2">
-        <h1 className="text-white text-2xl mb-5">Files</h1>
-        <Button
-          type="button"
-          disabled={songs.length === 0}
-          handleClick={() => {
-            void handleAddToPlaylist();
-          }}
-        >
-          <span className="text-slate-900">Create playlist</span>
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4 w-full">
-        <div className="col-span-1"></div>
-        <div className="col-span-2">
-          <div className="flex m-1 px-6 items-center ">
-            {songs.length > 0 && (
-              <>
-                <input
-                  id=""
-                  type="checkbox"
-                  value=""
-                  className="w-4 h-4focus:ring-2 accent-transparent"
-                  onChange={handleSelectAllCheckboxChange}
-                />
-                <label
-                  htmlFor="vue-checkbox"
-                  className="w-full py-3 ml-2 text-sm font-light text-gray-100"
-                >
-                  Select all
-                </label>
-              </>
-            )}
-          </div>
+    <>
+      <Modal
+        modalIsOpen={modalIsOpen}
+        setPlaylistName={setPlaylistName}
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        commitPlaylist={handleCreatePlaylist}
+        closeModal={() => {
+          setModalIsOpen(false);
+        }}
+      />
+      <div className="m-1 h-full">
+        <div className="flex flex-row place-content-between items-center group py-2">
+          <h1 className="text-white text-2xl mb-5">Files</h1>
+          <Button
+            type="button"
+            disabled={songs.length === 0}
+            handleClick={() => {
+              setModalIsOpen(true);
+            }}
+          >
+            <span className="text-slate-900">Create playlist</span>
+          </Button>
         </div>
-      </div>
-      <div className="grid grid-cols-3 gap-4 w-full h-[70%]">
-        <UploadToIPFS publicKey={publicKey} />
 
-        <div className="col-span-2 rounded-md border border-[#424242]  overflow-y overflow-y-auto">
-          {songs.length === 0 && (
-            <div className="flex flex-col items-center justify-center pt-5 pb-6 h-full">
-              <Icon
-                icon="pixelarticons:mood-sad"
-                className="w-8 h-8 text-white m-6"
-              />
-              <p className="mb-2 text-sm text-gray-100 text-center w-[70%]">
-                Ops, it looks like you don’t have any files yet. Upload files to
-                get started.
-              </p>
-            </div>
-          )}
-          <div>
-            <ul className="w-full h-full">
-              {songs.map((song) => (
-                <li
-                  key={song.id}
-                  className="w-full flex items-center py-3 hover:bg-[#424242] hover:bg-opacity-50 cursor-pointer pl-7"
-                >
+        <div className="grid grid-cols-3 gap-4 w-full">
+          <div className="col-span-1"></div>
+          <div className="col-span-2">
+            <div className="flex m-1 px-6 items-center ">
+              {songs.length > 0 && (
+                <>
                   <input
-                    id={song.id}
+                    id="select-all"
                     type="checkbox"
-                    checked={song.checked}
-                    onChange={handleAddToPlaylistButtonClick}
-                    className="w-4 h-4 focus:ring-2 accent-transparent"
+                    value=""
+                    className="w-4 h-4focus:ring-2 accent-transparent"
+                    onChange={handleSelectAllCheckboxChange}
                   />
                   <label
-                    htmlFor={song.id}
+                    htmlFor="select-all"
                     className="w-full py-3 ml-2 text-sm font-light text-gray-100"
                   >
-                    {song.filename}
+                    Select all
                   </label>
-                </li>
-              ))}
-            </ul>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-3 gap-4 w-full h-[70%]">
+          <UploadToIPFS publicKey={publicKey} />
+
+          <div className="col-span-2 rounded-md border border-[#424242]  overflow-y overflow-y-auto">
+            {songs.length === 0 && (
+              <div className="flex flex-col items-center justify-center pt-5 pb-6 h-full">
+                <Icon
+                  icon="pixelarticons:mood-sad"
+                  className="w-8 h-8 text-white m-6"
+                />
+                <p className="mb-2 text-sm text-gray-100 text-center w-[70%]">
+                  Ops, it looks like you don’t have any files yet. Upload files
+                  to get started.
+                </p>
+              </div>
+            )}
+            <div>
+              <ul className="w-full h-full">
+                {songs.map((song) => (
+                  <li
+                    key={song.id}
+                    className="w-full flex items-center py-3 hover:bg-[#424242] hover:bg-opacity-50 cursor-pointer pl-7"
+                  >
+                    <input
+                      id={song.id}
+                      type="checkbox"
+                      checked={song.checked}
+                      onChange={handleAddToPlaylistButtonClick}
+                      className="w-4 h-4 focus:ring-2 accent-transparent"
+                    />
+                    <label
+                      htmlFor={song.id}
+                      className="w-full py-3 ml-2 text-sm font-light text-gray-100"
+                    >
+                      {song.filename}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
