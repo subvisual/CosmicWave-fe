@@ -89,7 +89,7 @@ const FileManager = ({ publicKey }: Props) => {
             void handleAddToPlaylist();
           }}
         >
-          <span className="text-slate-900">Create playlist</span>
+          <span className="text-slate-900">Add to playlist</span>
         </Button>
       </div>
 
