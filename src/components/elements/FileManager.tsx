@@ -30,7 +30,7 @@ const FileManager = ({ publicKey }: Props) => {
   const sign = useSignMessage();
 
   const [songs, setSongs] = useState<Song[]>([]);
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [playlistName, setPlaylistName] = useState<string>(
     "My Amazing Playlist"
   );
