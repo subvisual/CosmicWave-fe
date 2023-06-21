@@ -4,6 +4,8 @@ import useHelia from "@/hooks/useHelia";
 import useDrand from "@/hooks/useDrand";
 import { Polybase } from "@polybase/client";
 import { useSignMessage } from "wagmi";
+import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
+import { Icon } from "@iconify/react";
 
 interface Props {
   publicKey: `0x${string}`;
@@ -26,6 +28,7 @@ const UploadToIPFS = ({ publicKey }: Props) => {
       }
     | undefined
   >(undefined);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<any>(null);
 
   const helia = useHelia();
@@ -92,39 +95,49 @@ const UploadToIPFS = ({ publicKey }: Props) => {
     } catch (err: any) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
     event.stopPropagation();
+    setLoading(true);
     void captureFile(event.target.files[0]);
   };
 
   return (
-    <div className="col-span-1 px-6 py-2 m-2 rounded-md border border-slate-100 border-opacity-50">
+    <div className="col-span-1 px-6 py-2 rounded-md border border-[#424242] ">
       <div className="w-full h-full">
-        <h1 className="text-white">Upload</h1>
-        <label
-          htmlFor="dropzone-file"
-          className="flex flex-col items-center justify-center w-full h-full cursor-pointer"
-        >
-          <div className="flex flex-col items-center justify-center pt-5 pb-6">
-            <p className="mb-2 text-sm text-gray-100">
-              <span className="font-semibold">Click to upload</span> or drag and
-              drop
-            </p>
-            <p className="text-xs text-gray-100">MP3 or WAV</p>
+        {!loading && (
+          <label
+            htmlFor="dropzone-file"
+            className="flex flex-col items-center justify-center w-full h-full cursor-pointer"
+          >
+            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+              <ArrowUpTrayIcon className="w-8 h-8 text-white m-6" />
+              <p className="mb-2 text-sm text-gray-100 text-center">
+                Click to upload or drag and drop
+              </p>
+            </div>
+            <input
+              id="dropzone-file"
+              type="file"
+              className="hidden"
+              accept=".mp3,audio/*"
+              onChange={(e) => {
+                handleSubmit(e);
+              }}
+            />
+          </label>
+        )}
+        {loading && (
+          <div className="flex h-full w-full items-center justify-center">
+            <Icon
+              icon="mingcute:loading-3-line"
+              className="text-white h-12 w-12 animate-[spin_3s_linear_infinite]"
+            />
           </div>
-          <input
-            id="dropzone-file"
-            type="file"
-            className="hidden"
-            accept=".mp3,audio/*"
-            onChange={(e) => {
-              handleSubmit(e);
-            }}
-          />
-        </label>
+        )}
       </div>
     </div>
   );

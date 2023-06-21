@@ -3,6 +3,7 @@ import Button from "./Button";
 import UploadToIPFS from "./UploadToIPFS";
 import { useSignMessage } from "wagmi";
 import { Polybase } from "@polybase/client";
+import { Icon } from "@iconify/react";
 
 interface Props {
   publicKey: `0x${string}`;
@@ -78,16 +79,17 @@ const FileManager = ({ publicKey }: Props) => {
   };
 
   return (
-    <div className="m-1 h-96">
-      <div className="flex flex-row place-content-between items-center group">
+    <div className="m-1 h-full">
+      <div className="flex flex-row place-content-between items-center group py-2">
         <h1 className="text-white text-2xl mb-5">Files</h1>
         <Button
           type="button"
+          disabled={songs.length === 0}
           handleClick={() => {
             void handleAddToPlaylist();
           }}
         >
-          <span className="text-slate-900">Add to playlist</span>
+          <span className="text-slate-900">Create playlist</span>
         </Button>
       </div>
 
@@ -95,32 +97,48 @@ const FileManager = ({ publicKey }: Props) => {
         <div className="col-span-1"></div>
         <div className="col-span-2">
           <div className="flex m-1 px-6 items-center ">
-            <input
-              id=""
-              type="checkbox"
-              value=""
-              className="w-4 h-4focus:ring-2 accent-transparent"
-              onChange={handleSelectAllCheckboxChange}
-            />
-            <label
-              htmlFor="vue-checkbox"
-              className="w-full py-3 ml-2 text-sm font-light text-gray-100"
-            >
-              Select all
-            </label>
+            {songs.length > 0 && (
+              <>
+                <input
+                  id=""
+                  type="checkbox"
+                  value=""
+                  className="w-4 h-4focus:ring-2 accent-transparent"
+                  onChange={handleSelectAllCheckboxChange}
+                />
+                <label
+                  htmlFor="vue-checkbox"
+                  className="w-full py-3 ml-2 text-sm font-light text-gray-100"
+                >
+                  Select all
+                </label>
+              </>
+            )}
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-4 w-full h-64">
+      <div className="grid grid-cols-3 gap-4 w-full h-[70%]">
         <UploadToIPFS publicKey={publicKey} />
 
-        <div className="col-span-2 rounded-md border border-slate-100 border-opacity-50 overflow-y overflow-y-auto h-64">
+        <div className="col-span-2 rounded-md border border-[#424242]  overflow-y overflow-y-auto">
+          {songs.length === 0 && (
+            <div className="flex flex-col items-center justify-center pt-5 pb-6 h-full">
+              <Icon
+                icon="pixelarticons:mood-sad"
+                className="w-8 h-8 text-white m-6"
+              />
+              <p className="mb-2 text-sm text-gray-100 text-center w-[70%]">
+                Ops, it looks like you don’t have any files yet. Upload files to
+                get started.
+              </p>
+            </div>
+          )}
           <div>
-            <ul className="w-full">
+            <ul className="w-full h-full">
               {songs.map((song) => (
                 <li
                   key={song.id}
-                  className="w-full flex items-center py-3 hover:bg-slate-700 hover:bg-opacity-50 cursor-pointer pl-7"
+                  className="w-full flex items-center py-3 hover:bg-[#424242] hover:bg-opacity-50 cursor-pointer pl-7"
                 >
                   <input
                     id={song.id}
@@ -130,7 +148,7 @@ const FileManager = ({ publicKey }: Props) => {
                     className="w-4 h-4 focus:ring-2 accent-transparent"
                   />
                   <label
-                    htmlFor="vue-checkbox"
+                    htmlFor={song.id}
                     className="w-full py-3 ml-2 text-sm font-light text-gray-100"
                   >
                     {song.filename}

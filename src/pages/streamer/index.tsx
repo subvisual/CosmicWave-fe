@@ -7,9 +7,10 @@ import { useRouter } from "next/router";
 
 const index = () => {
   const { push } = useRouter();
+  const { address } = useAccount();
+
   const [publicKey, setPublicKey] = useState<`0x${string}`>();
 
-  const { address } = useAccount();
   const sig = useSignMessage({
     message: "Sign In",
     onSuccess: (signature) => {
@@ -34,17 +35,31 @@ const index = () => {
     <main className="mx-auto py-6 px-28 h-full w-full">
       {!!address && !!publicKey && (
         <div className="flex h-full w-full justify-between items-center place-content-between">
-          <div className="grid grid-cols-3 gap-4 w-full">
-            <div className="col-span-2 w-full">
-              <div className="px-6 py-2 m-2 rounded-md border border-slate-100 border-opacity-50">
+          <div className="grid grid-cols-3 gap-4 w-full h-[480px]">
+            <div className="col-span-2 w-full h-full">
+              <div className="px-6 m-2 rounded-md border border-[#424242]  h-full">
                 <FileManager publicKey={publicKey} />
               </div>
             </div>
-            <div className="col-span-1 w-full">
-              <div className="px-6 py-2 m-2 rounded-md border border-slate-100 border-opacity-50">
+            <div className="col-span-1 w-full h-full">
+              <div className=" my-2 rounded-md border border-[#424242]  h-full">
                 <PlaylistsLibrary />
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {!publicKey && (
+        <div className="flex h-full w-full justify-between items-center place-content-between">
+          <div className="flex flex-col gap-4 w-[60%] h-[480px]">
+            <h1 className="text-white text-4xl mb-5 font-thin leading-[60px]">
+              &ldquo;You shouldn&lsquo;t come around here singing up to people
+              like that... Anyway, what you gonna do about it?&rdquo;
+            </h1>
+            <h1 className="text-white text-xl mt-6 mb-5">
+              Which is to say that you must re-connect your wallet and sign the
+              transaction to get authenticated.
+            </h1>
           </div>
         </div>
       )}

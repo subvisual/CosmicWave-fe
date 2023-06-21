@@ -62,7 +62,7 @@ const useHelia = () => {
       });
 
       const heliaNode = await createHelia({ libp2p });
-
+      await heliaNode.libp2p.start();
       const nodeId = heliaNode.libp2p.peerId.toString();
       const nodeIsOnline = heliaNode.libp2p.isStarted();
 
@@ -77,7 +77,6 @@ const useHelia = () => {
 
   useEffect(() => {
     if (!helia) return;
-
     helia.libp2p.addEventListener("peer:discovery", (evt: any) => {
       const peerInfo = evt.detail;
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
